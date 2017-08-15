@@ -1,24 +1,38 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace Kata_ShoppingCart
 {
     public class ShoppingCartTests
     {
-        [Test]
-        public void Single_item_gives_individual_price()
+        private static readonly List<Product> Products = new List<Product>
         {
-            var cart = new ShoppingCart();
-            cart.Scan("A99");
-            Assert.That(cart.Total(), Is.EqualTo(50));
+            new Product("A99", 50),
+            new Product("B15", 30),
+            new Product("C40", 60),
+            new Product("T34", 99)
+        };
+
+        [TestCase("A99", 50)]
+        [TestCase("B15", 30)]
+        [TestCase("C40", 60)]
+        [TestCase("T34", 99)]
+        public void Single_item_gives_individual_price(string sku, int price)
+        {
+            var cart = new ShoppingCart(Products);
+            cart.Scan(sku);
+            Assert.That(cart.Total(), Is.EqualTo(price));
         }
 
         [Test]
-        public void Two_of_same_item_cart_gives_double_the_individual_price()
+        public void Multiple_products_gives_sum_of_prices()
         {
-            var cart = new ShoppingCart();
-            cart.Scan("A99");
-            cart.Scan("A99");
-            Assert.That(cart.Total(), Is.EqualTo(100));
+            var cart = new ShoppingCart(Products);
+            cart.Scan(Products[0].Sku);
+            cart.Scan(Products[1].Sku);
+            cart.Scan(Products[2].Sku);
+            cart.Scan(Products[3].Sku);
+            Assert.That(cart.Total(), Is.EqualTo(239));
         }
     }
 }
