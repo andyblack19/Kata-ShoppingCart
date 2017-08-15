@@ -72,5 +72,16 @@ namespace Kata_ShoppingCart
                 cart.Scan("A99");
             Assert.That(cart.Total(), Is.EqualTo(260));
         }
+
+        [Test]
+        public void Multiple_discounts_applied()
+        {
+            var cart = InitialiseShoppingCart();
+            for (var i = 0; i < 3; i++)
+                cart.Scan("A99");
+            for (var i = 0; i < 2; i++)
+                cart.Scan("B15");
+            Assert.That(cart.Total(), Is.EqualTo(175));
+        }
     }
 }
