@@ -6,13 +6,13 @@ namespace Kata_ShoppingCart
     public class ShoppingCart
     {
         private readonly IReadOnlyCollection<Product> _products;
-        private readonly IReadOnlyCollection<Discount> _discounts;
+        private readonly IReadOnlyCollection<DiscountRule> _discountRules;
         private readonly List<string> _items = new List<string>();
 
-        public ShoppingCart(IReadOnlyCollection<Product> products, IReadOnlyCollection<Discount> discounts)
+        public ShoppingCart(IReadOnlyCollection<Product> products, IReadOnlyCollection<DiscountRule> discountRules)
         {
             _products = products;
-            _discounts = discounts;
+            _discountRules = discountRules;
         }
 
         public void Scan(string sku)
@@ -22,16 +22,16 @@ namespace Kata_ShoppingCart
 
         public int Total()
         {
-            var total = _items.Sum(item => _products.Single(x => x.Sku == item).Price);
+            var subtotal = _items.Sum(item => _products.Single(x => x.Sku == item).Price);
+            var discount = 0;
 
-            foreach (var discount in _discounts)
+            foreach (var discountRule in _discountRules)
             {
-                var numberOfTimesDiscountApplies = _items.Count(x => x == discount.Sku) / discount.Quantity;
-                var discountAmount = discount.Deduction * numberOfTimesDiscountApplies;
-                total -= discountAmount;
+                var timesDiscountApplies = _items.Count(x => x == discountRule.Sku) / discountRule.Quantity;
+                discount += discountRule.Deduction * timesDiscountApplies;
             }
 
-            return total;
+            return subtotal - discount;
         }
     }
 }

@@ -13,10 +13,10 @@ namespace Kata_ShoppingCart
             new Product("T34", 99)
         };
 
-        private static readonly List<Discount> Discounts = new List<Discount>
+        private static readonly List<DiscountRule> Discounts = new List<DiscountRule>
         {
-            new Discount("A99", 3, 20),
-            new Discount("B15", 2, 15)
+            new DiscountRule("A99", 3, 20),
+            new DiscountRule("B15", 2, 15)
         };
 
         private static ShoppingCart InitialiseShoppingCart()
